@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}
+Task List
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <h3>Task List</h3>
+    <!-- Filter Form -->
+<form class="d-flex justify-content-start p-2 align-items-center gap-3" method="GET" action="{% url 'task-list' %}">
+    <div class="d-flex gap-3 flex-wrap">
+        <div>
+            <label for="status">Filter by Status:</label>
+            <select class="form-select" aria-label="Default select example" name="status" id="status">
+                <option value="">All Statuses</option>
+                <option value="ToDo" {% if request.GET.status == "ToDo" %}selected{% endif %}>ToDo</option>
+                <option value="Done" {% if request.GET.status == "Done" %}selected{% endif %}>Done</option>
+                <option value="InProgress" {% if request.GET.status == "InProgress" %}selected{% endif %}>InProgress</option>
+            </select>
+        </div>
+        <div>
+            <label for="sort_by">Sort by:</label>
+            <select class="form-select" aria-label="Default select example" name="sort_by" id="sort_by">
+                <option value="">No Sorting</option>
+                <option value="priority" {% if request.GET.sort_by == "priority" %}selected{% endif %}>Priority</option>
+                <option value="due_date" {% if request.GET.sort_by == "due_date" %}selected{% endif %}>Due Date</option>
+            </select>
+        </div>
+    </div>
+    <button class="btn btn-primary btn-outline mt-4" type="submit">Filter</button>
+</form>
+
+<!--Task List Table -->
+    <table class="shadow-sm p-3 mb-5 bg-body rounded table table table-striped table-success text-center">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Status</th>
+            <th scope="col">Priorty</th>
+            <th scope="col">Due Date</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% if tasks %}
+            {% for task in tasks  %}
+            <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{task.title}}</td>
+                <td>{{task.status}}</td>
+                <td>{{task.get_priority_display}}</td>
+                <td>{{task.due_date}}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <p>Sorry There is no task yet created.</p>
+            {% endif %}
+         
+        </tbody>
+      </table>
+   
+</div>
+{% endblock content %}
